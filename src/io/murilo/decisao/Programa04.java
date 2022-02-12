@@ -11,6 +11,11 @@ public class Programa04 {
 
         if(numero > 5) {
             JOptionPane.showMessageDialog(null,"Sim o numero " + numero + "é maior do que 5");
+        } else if(numero == 5){
+            JOptionPane.showMessageDialog(null, "O numero é 5");
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Nao, o numero " + numero + "não é maior do que 5");
         }
     }
 }
