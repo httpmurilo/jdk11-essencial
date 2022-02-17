@@ -1,15 +1,17 @@
 package io.murilo.templatemethod;
 
 public abstract class Treinamento {
-    void treinoDiario() {
+    public final void treinoDiario() {
         preparoFisico();
         jogoTreino();
         treinoTatico();
     }
 
-    protected abstract void preparoFisico();
+    public abstract void preparoFisico();
 
-    protected abstract void jogoTreino();
+    public abstract void jogoTreino();
 
-    protected abstract void treinoTatico();
+    public  final void treinoTatico() {
+        System.out.println("treino tatico");
+    }
 }
