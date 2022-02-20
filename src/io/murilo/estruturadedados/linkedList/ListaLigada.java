@@ -11,15 +11,31 @@ public class ListaLigada {
      * @param elemento
      */
     public void adicionarNoComeco(Object elemento) {
-        Celula nova = new Celula(elemento, this.primeira);
-        this.primeira = nova;
+//        metodo que atende somente o cenário da lista encadeada, não atende o cenário de listas duplamentes encadeadas
+//        Celula nova = new Celula(elemento, this.primeira);
+//        this.primeira = nova;
+//
+//        if(this.total == 0) {
+//            //se o total for 0 significa que não tem elementos, então primeiro e ultimo tem o mesmo objeto
+//            this.ultima = this.primeira;
+//        }
+//
+//        this.total = this.total + 1;
 
         if(this.total == 0) {
-            //se o total for 0 significa que não tem elementos, então primeiro e ultimo tem o mesmo objeto
-            this.ultima = this.primeira;
+            // a gente so tem uma celula, então ela vai ser a primeira e a ultima
+            Celula nova = new Celula(elemento);
+            this.primeira = nova;
+            this.ultima = nova;
+        } else {
+            //instancia uma nva celula
+            Celula nova = new Celula(elemento, this.primeira);
+            this.primeira.setAnterior(nova);
+            this.primeira = nova;
         }
-
         this.total = this.total + 1;
+
+
     }
 
     /**
@@ -33,8 +49,9 @@ public class ListaLigada {
             this.adicionarNoComeco(elemento);
         } else  {
             // aponta para o novo elemento, e move a proxima para null
-            Celula nova = new Celula(elemento, null);
+            Celula nova = new Celula(elemento);
             this.ultima.setProximo(nova);
+            nova.setAnterior(this.ultima);
             this.ultima = nova;
             this.total = this.total + 1;
         }
@@ -55,8 +72,14 @@ public class ListaLigada {
         //se caso não for a ultima ou primeira posição
 
         Celula anterior = this.pegarCelula(posicao -  1);
+
+        Celula proxima = anterior.getProximo();
+
         Celula nova = new Celula(elemento, anterior.getProximo());
+
         anterior.setProximo(nova);
+        nova.setAnterior(anterior);
+        proxima.setAnterior(nova);
         this.total = this.total + 1;
 
     }
@@ -82,9 +105,38 @@ public class ListaLigada {
     }
 
     public void remover(int posicao) {
+        //se so tiver um elemento
+        if(posicao == 0 ) {
+            this.removerDoComeço();
+            //se for o ultimo elemento
+        } else if (posicao == this.total -1) {
+            this.removerDoFim();
+        } else {
+            //se for um elemento do meio
+            Celula anterior = this.pegarCelula(posicao -1);
+            Celula atual = anterior.getProximo();
+            Celula proximo = atual.getProximo();
+
+            anterior.setProximo(proximo);
+            proximo.setAnterior(anterior);
+
+            this.total = this.total -1;
+
+        }
     }
 
-    public void removerDoComeço(int posicao) {
+    public void removerDoFim() {
+        if(this.total == 1) {
+            this.removerDoComeço();
+        } else {
+            Celula penultima = this.ultima.getAnterior();
+            penultima.setProximo(null);
+            this.ultima = penultima;
+            this.total = this.total - 1;
+        }
+    }
+
+    public void removerDoComeço() {
         if(this.total ==0) {
             throw new IllegalArgumentException("Lista vazia");
         }
@@ -102,6 +154,14 @@ public class ListaLigada {
     }
 
     public boolean contemElemento(Object obj) {
+        Celula atual = this.primeira;
+
+        while(atual != null) {
+           if(atual.getElemento().equals(obj)) {
+               return true;
+           }
+           atual = atual.getProximo();
+        }
         return false;
     }
 
